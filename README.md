@@ -5,6 +5,8 @@ An educational computer-vision project that loads MRI images from class folders,
 > **Medical safety:** This repository is an academic experiment, not a medical device. It is not validated for clinical use and must not be used to diagnose, rule out, screen for, or make treatment decisions about a brain tumor. A prediction is only a dataset-class label. MRI interpretation belongs to qualified medical professionals using validated clinical workflows.
 
 ## Project status
+🚀live demo
+https://brain-tumor-detection-using-mri-images-hourma4g3xbqstkjbmh3yd.streamlit.app/
 
 - Image upload and preview: available in Streamlit.
 - Training pipeline: available; requires you to download the dataset.
