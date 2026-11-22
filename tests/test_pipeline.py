@@ -102,6 +102,27 @@ class TrainingAndInferenceTests(unittest.TestCase):
             prediction = predict_image(Image.new("L", (24, 24), color=40), artifact)
             self.assertIn(prediction, artifact["class_names"])
 
+
+    def test_train_uses_separate_testing_directory_when_provided(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            training_root = make_sample_dataset(root / "dataset_train", images_per_class=5)
+            testing_root = make_sample_dataset(root / "dataset_test", images_per_class=3)
+            test_dir = testing_root / "Training"
+            test_dir.rename(testing_root / "Testing")
+            artifact_path = root / "models" / "separate-test.joblib"
+            results = train(
+                data_dir=training_root,
+                test_data_dir=testing_root / "Testing",
+                model_output=artifact_path,
+                image_size=16,
+            )
+            self.assertEqual(results["evaluation_method"], "separate_test_directory")
+            self.assertEqual(results["training_images"], 10)
+            self.assertEqual(results["test_images"], 6)
+            artifact = load_model_artifact(artifact_path)
+            self.assertEqual(artifact["evaluation_method"], "separate_test_directory")
+
     def test_train_rejects_too_small_stratified_split(self):
         with tempfile.TemporaryDirectory() as temp:
             root = make_sample_dataset(Path(temp), images_per_class=2)
