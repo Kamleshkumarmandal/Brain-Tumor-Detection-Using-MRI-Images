@@ -34,6 +34,16 @@ def train(
     if min(counts.values()) < 2:
         raise ValueError("Every class needs at least two images.")
 
+    # Stratification requires at least one sample from every class in both splits.
+    from math import ceil
+    test_count = ceil(len(y) * test_size)
+    train_count = len(y) - test_count
+    if test_count < len(class_names) or train_count < len(class_names):
+        raise ValueError(
+            "Not enough images for a stratified split with this test_size. "
+            "Add more images per class or increase test_size."
+        )
+
     x_train, x_test, y_train, y_test = train_test_split(
         x,
         y,
